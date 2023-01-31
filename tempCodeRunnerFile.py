@@ -17,37 +17,44 @@ def caracter(character):
     if(re.match(reser,character)):
         simbolo=" Tipo "
         return 0
-    elif re.match(iden,character):
-        simbolo="Identificador"
-        return 1
-    elif re.match(prin,character):
-        simbolo="Main"
-        return 2
-    elif re.match("\(",character):
-        simbolo="ParIzq"
-        return 3
-    elif re.match("\)",character):
-        simbolo="ParDer"
-        return 4
-    elif re.match("\{",character):
-        simbolo="LlaIzq"
-        return 5
-    elif re.match("\}",character):
-        simbolo="LlaDer"
-        return 6
-    elif re.match(",",character):
-        simbolo="Coma"
-        return 7
-    elif re.match("$",character):
-        simbolo="FinExp"
-        return 8
     else:
-        if(character==Fin):
-            return 9
-        
-        #si no es ni un digito ni un operador entonces es un caracter no validp
-        print("Error el ",character,"no es valido")
-        exit()
+        if(re.match(prin,character)):
+            simbolo="Main"
+            return 2
+        else:
+            if(re.match("\(",character)):
+                simbolo="ParIzq"
+                return 3
+            else:
+                if(re.match("\)",character)):
+                    simbolo="ParDer"
+                    return 4
+                else:
+                    if(re.match("\{",character)):
+                        simbolo="LlaIzq"
+                        return 5
+                    else:
+                        if(re.match("\}",character)):
+                            simbolo="LlaDer"
+                            return 6
+                        else:
+                            if(re.match(",",character)):
+                                simbolo="Coma"
+                                return 7
+                            else:
+                                if(re.match("$",character)):
+                                    simbolo="FinExp"
+                                    return 8
+                                else:
+                                    if(re.match(iden,character)):
+                                        simbolo="Identificador"
+                                        return 1
+                                    else:
+                                        if(character==Fin):
+                                            return 9
+                                    #si no es ni un digito ni un operador entonces es un caracter no validp
+                                    print("Error el ",character,"no es valido")
+                                    exit()
 
 #definimos al la funcion  encabezado
 def encabezado():
@@ -87,12 +94,13 @@ print ("""+-------------------------------------+
 |    Ingrese una cadena a evaluar:    |
 +-------------------------------------+""")
 cadena = input()
-exp=cadena+"$"
+exp=cadena+" $"
+entrada=exp.split(sep=" ")
 body()
 encabezado()
 
 #ciclo para recorrer la cadena
-for  character in exp:
+for  character in entrada:
     estadosig=estado
     
     #llamamos al metodo para saber si es un caracter valido y el valor retornado se guarda en charcaracter
