@@ -38,11 +38,11 @@ def caracter(character):
                             simbolo="LlaDer"
                             return 6
                         else:
-                            if(re.match(",",character)):
+                            if(re.match("\,",character)):
                                 simbolo="Coma"
                                 return 7
                             else:
-                                if(re.match("$",character)):
+                                if(re.match("\$",character)):
                                     simbolo="FinExp"
                                     return 8
                                 else:
