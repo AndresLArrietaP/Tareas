@@ -1,5 +1,6 @@
 import re
 
+
 #Definimos la funcion caracter 
 def caracter(character):
     global simbolo
@@ -7,7 +8,8 @@ def caracter(character):
     global Fin
     Fin=""
     iden="[a-zA-Z_][a-zA-Z0-9_]"
-    reser="(int|float|double|char|string|byte|void)"
+    reser="(int|float|double|char|string|bool|byte|void)"
+
     prin="main"
     signos="(\(|\)|\{|\}|;|,)"
     digito="[0-9]"
@@ -88,44 +90,120 @@ tabla=[[1,"E",7,"E","E","E","E","E","E","E"]
       ,["E","E","E","E",4,"E","E",14,"E","E"]
       ,[12,"E","E","E","E","E","E","E","E","E"]
       ,["E","E","E","E","E","E","E","E","E","A"]]
-estado = 0
 
-print ("""+-------------------------------------+
-|    Ingrese una cadena a evaluar:    |
-+-------------------------------------+""")
-cadena = input()
-exp=cadena+" $"
-entrada=exp.split(sep=" ")
-body()
-encabezado()
 
-#ciclo para recorrer la cadena
-for  character in entrada:
-    estadosig=estado
-    
-    #llamamos al metodo para saber si es un caracter valido y el valor retornado se guarda en charcaracter
-    charcaracter= caracter(character)
-    
-    #guardamos en estado el valor obtenido en la tabla segun las cordenadas que recibio anteriormente
-    estado=tabla[estado][charcaracter]
-    
-    #Si el valor obtenido es una E imprimimos cadena no valida
-    if (estado=="E"):
-        print("|     ",estadosig,"      |  ",character,"    |",simbolo," |     ",estado,"       |")
-        body()
-        print("""|              Cadena No Valida :(                   |
-+----------------------------------------------------+""")
-        exit()
-    contenido(estadosig,character,simbolo,estado)
-
-#al concluir si el estado no es 3 que es el de aceptacion imprimimos cadena no valida    
-if(estado!=15):
-        print("""|              Cadena No Valida :(                   |
-+----------------------------------------------------+""")
-
-#si el estado es 3 es una cadena de aceptacion
-if(estado==15):
-    print("|     ",estado,"      |         |    FND    |               |")
+def consola():
+    estado = 0
+    print ("""+-------------------------------------+
+    |    Ingrese una cadena a evaluar:    |
+    +-------------------------------------+""")
+    cadena = input()
+    exp=cadena+" $"
+    entrada=exp.split(sep=" ")
     body()
-    print("""|                Cadena Valida :)                    |
-+----------------------------------------------------+""")
+    encabezado()
+
+    #ciclo para recorrer la cadena
+    for  character in entrada:
+        estadosig=estado
+        
+        #llamamos al metodo para saber si es un caracter valido y el valor retornado se guarda en charcaracter
+        charcaracter= caracter(character)
+        
+        #guardamos en estado el valor obtenido en la tabla segun las cordenadas que recibio anteriormente
+        estado=tabla[estado][charcaracter]
+        
+        #Si el valor obtenido es una E imprimimos cadena no valida
+        if (estado=="E"):
+            print("|     ",estadosig,"      |  ",character,"    |",simbolo," |     ",estado,"       |")
+            body()
+            print("""|              Cadena No Valida :(                   |
+    +----------------------------------------------------+""")
+            exit()
+        contenido(estadosig,character,simbolo,estado)
+
+    #al concluir si el estado no es 3 que es el de aceptacion imprimimos cadena no valida    
+    if(estado!=15):
+            print("""|              Cadena No Valida :(                   |
+    +----------------------------------------------------+""")
+
+    #si el estado es 3 es una cadena de aceptacion
+    if(estado==15):
+        print("|     ",estado,"      |         |    FND    |               |")
+        body()
+        print("""|                Cadena Valida :)                    |
+    +----------------------------------------------------+""")
+
+def archivo():
+    estado = 0
+    file = open("/Users/acer/Pictures/PYTHON/datux/Tareas/Tareas/TESTEOS/test.txt") #poner ruta propia
+    a=file.read()
+    exp=a+" $"
+    count=0
+    program = exp.split("\n")
+    lista=[]
+    defi=[]
+    for linea in program:
+        item=linea.split(sep=" ")
+        lista.append(item)
+    for sub_lista in lista:
+    # elemento sera cada elemento de cada sub_lista.
+        for elemento in sub_lista :
+            defi.append(elemento)
+    body()
+    encabezado()
+
+    #ciclo para recorrer la cadena
+    for  character in defi:
+        count=count+1
+        estadosig=estado
+        
+        #llamamos al metodo para saber si es un caracter valido y el valor retornado se guarda en charcaracter
+        charcaracter= caracter(character)
+        
+        #guardamos en estado el valor obtenido en la tabla segun las cordenadas que recibio anteriormente
+        estado=tabla[estado][charcaracter]
+        
+        #Si el valor obtenido es una E imprimimos cadena no valida
+        if (estado=="E"):
+            print("|     ",estadosig,"      |  ",character,"    |",simbolo," |     ",estado,"       |")
+            body()
+            print("""|              Cadena No Valida :(                   |
+    +----------------------------------------------------+""")
+            print("Error en el elemento nro ",count)
+            exit()
+        contenido(estadosig,character,simbolo,estado)
+
+    #al concluir si el estado no es 3 que es el de aceptacion imprimimos cadena no valida    
+    if(estado!=15):
+            print("""|              Cadena No Valida :(                   |
+    +----------------------------------------------------+""")
+            print("Error en el elemento nro ",count)
+    #si el estado es 3 es una cadena de aceptacion
+    if(estado==15):
+        print("|     ",estado,"      |         |    FND    |               |")
+        body()
+        print("""|                Cadena Valida :)                    |
+    +----------------------------------------------------+""")
+        print("Error en el elemento nro ",count)
+        
+msgleer = """\nElija como desea analizarlo (separar cada palabra o simbolo):
+
+    a) Leer en consola
+    b) Leer archivo de texto
+
+    """
+print(msgleer)
+opc=input('Ingresar la opción: ').upper()
+print('Opción elegida: ',opc)
+
+if(opc!='A' or opc!='B'):
+    if opc=='A':
+        consola()
+    elif opc=='B':
+        archivo()
+
+    else:
+        print('OPCION INVÁLIDA')
+else:
+    print('OPCIÓN INVALIDA')

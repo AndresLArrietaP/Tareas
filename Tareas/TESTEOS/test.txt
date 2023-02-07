@@ -1,0 +1,3 @@
+int hola ( int mundo , float afd ) { }
+float nombre ( char an , string bn ) { }
+main ( ) { }
