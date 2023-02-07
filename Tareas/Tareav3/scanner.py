@@ -1,8 +1,10 @@
 from tokens import Token, TokenType
 
+
 class Scanner:
     def __init__(self,text)->None:
         self.it= iter(text)
+        #self.id=''
         self.curr=None
         self.advance()
 
@@ -22,6 +24,12 @@ class Scanner:
             elif self.curr==')':
                 self.advance()
                 return Token(TokenType.RPAREN,')')
+            elif self.curr=='{':
+                self.advance()
+                return Token(TokenType.LKEY,'{')
+            elif self.curr=='}':
+                self.advance()
+                return Token(TokenType.RKEY,'}')
             elif self.curr=='t':
                 self.verify('true')
                 return Token(TokenType.TRUE,'true')
@@ -37,8 +45,36 @@ class Scanner:
             elif self.curr=='n':
                 self.verify('not')
                 return Token(TokenType.NOT,'not')
+            elif self.curr=='m':
+                self.verify('main')
+                return Token(TokenType.MAIN,'main')
+            elif self.curr=='i' or self.curr=='f' or self.curr=='d' or self.curr=='s' or self.curr=='c' or self.curr=='b' or self.curr=='v':
+                if self.curr=='i':
+                    self.verify('int')
+                    return Token(TokenType.DTYPE,'int')
+                elif self.curr=='f':
+                    self.verify('float')
+                    return Token(TokenType.DTYPE,'float')
+                elif self.curr=='d':
+                    self.verify('double')
+                    return Token(TokenType.DTYPE,'double')
+                elif self.curr=='s':
+                    self.verify('string')
+                    return Token(TokenType.DTYPE,'string')
+                elif self.curr=='c':
+                    self.verify('char')
+                    return Token(TokenType.DTYPE,'char')
+                elif self.curr=='b':
+                    self.verify('bool')
+                    return Token(TokenType.DTYPE,'bool')
+                elif self.curr=='b':
+                    self.verify('byte')
+                    return Token(TokenType.DTYPE,'byte')
+                elif self.curr=='v':
+                    self.verify('void')
+                    return Token(TokenType.DTYPE,'void')
             else:
-                raise Exception('Caracter no reconocido')
+                raise Exception('Token no reconocido')
         return None
 
     def ScanAll(self):

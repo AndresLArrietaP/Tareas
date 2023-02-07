@@ -9,6 +9,12 @@ class TokenType(Enum):
     NOT=5
     LPAREN=6
     RPAREN=7
+    LKEY=8
+    RKEY=9
+    MAIN=10
+    DTYPE=11
+    ID=12
+    END=13
 
     def __str__(self) -> str:
         return self.name
