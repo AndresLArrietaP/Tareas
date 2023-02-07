@@ -1,7 +1,13 @@
 from scanner import Scanner
 
 def main():
-    s=Scanner("true or false")
+    estado = 0
+    print ("""+-------------------------------------+
+    |    Ingrese una cadena a evaluar:    |
+    +-------------------------------------+""")
+    cadena = input()
+    #exp=cadena+" $"
+    s=Scanner(cadena)
     tokens=s.ScanAll()
     print(tokens)
 
