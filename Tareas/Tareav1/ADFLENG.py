@@ -15,7 +15,7 @@ def caracter(character):
     digito="[0-9]"
     operador="(+|-|*|/)"
     
-    #comparamos si es digito o operador
+    #comparamos si es alguno de los sìmbolos del lenguaje
     if(re.match(reser,character)):
         simbolo=" Tipo "
         return 0
@@ -126,13 +126,13 @@ def consola():
             exit()
         contenido(estadosig,character,simbolo,estado)
 
-    #al concluir si el estado no es 3 que es el de aceptacion imprimimos cadena no valida    
+    #al concluir si el estado no es 15 que es el de aceptacion imprimimos cadena no valida    
     if(estado!=15):
             print("""|              NO RECONOCIDA                  |
 +----------------------------------------------------+""")
             print("Error en el elemento nro ",count)
 
-    #si el estado es 3 es una cadena de aceptacion
+    #si el estado es 15 es una cadena de aceptacion
     if(estado==15):
         print("|     ",estado,"      |         |    FND    |               |")
         body()
@@ -153,7 +153,6 @@ def archivo():
         item=linea.split(sep=" ")
         lista.append(item)
     for sub_lista in lista:
-    # elemento sera cada elemento de cada sub_lista.
         for elemento in sub_lista :
             defi.append(elemento)
     body()
@@ -180,12 +179,12 @@ def archivo():
             exit()
         contenido(estadosig,character,simbolo,estado)
 
-    #al concluir si el estado no es 3 que es el de aceptacion imprimimos cadena no valida    
+    #al concluir si el estado no es 15 que es el de aceptacion imprimimos cadena no valida    
     if(estado!=15):
             print("""|              NO RECONOCIDO                   |
 +----------------------------------------------------+""")
             print("Error en el elemento nro ",count)
-    #si el estado es 3 es una cadena de aceptacion
+    #si el estado es 15 es una cadena de aceptacion
     if(estado==15):
         print("|     ",estado,"      |         |    FND    |               |")
         body()
