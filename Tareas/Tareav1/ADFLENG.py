@@ -94,17 +94,20 @@ tabla=[[1,"E",7,"E","E","E","E","E","E","E"]
 
 def consola():
     estado = 0
-    print ("""+-------------------------------------+
+    count=0
+    print ("""
+    +-------------------------------------+
     |    Ingrese una cadena a evaluar:    |
     +-------------------------------------+""")
-    cadena = input()
-    exp=cadena+" $"
-    entrada=exp.split(sep=" ")
+    cadena = input("Separados por un espacio: ")
+    exp=cadena+" $" 
+    entrada=exp.split(sep=" ")  
     body()
     encabezado()
 
     #ciclo para recorrer la cadena
     for  character in entrada:
+        count=count+1
         estadosig=estado
         
         #llamamos al metodo para saber si es un caracter valido y el valor retornado se guarda en charcaracter
@@ -117,22 +120,25 @@ def consola():
         if (estado=="E"):
             print("|     ",estadosig,"      |  ",character,"    |",simbolo," |     ",estado,"       |")
             body()
-            print("""|              Cadena No Valida :(                   |
-    +----------------------------------------------------+""")
+            print("""|              NO RECONOCE                  |
++----------------------------------------------------+""")
+            print("Error en el elemento nro ",count)
             exit()
         contenido(estadosig,character,simbolo,estado)
 
     #al concluir si el estado no es 3 que es el de aceptacion imprimimos cadena no valida    
     if(estado!=15):
-            print("""|              Cadena No Valida :(                   |
-    +----------------------------------------------------+""")
+            print("""|              NO RECONOCIDA                  |
++----------------------------------------------------+""")
+            print("Error en el elemento nro ",count)
 
     #si el estado es 3 es una cadena de aceptacion
     if(estado==15):
         print("|     ",estado,"      |         |    FND    |               |")
         body()
-        print("""|                Cadena Valida :)                    |
-    +----------------------------------------------------+""")
+        print("""|                RECONOCIDA                   |
++----------------------------------------------------+""")
+        print("Simbolos analizados: ",count)
 
 def archivo():
     estado = 0
@@ -168,24 +174,24 @@ def archivo():
         if (estado=="E"):
             print("|     ",estadosig,"      |  ",character,"    |",simbolo," |     ",estado,"       |")
             body()
-            print("""|              Cadena No Valida :(                   |
-    +----------------------------------------------------+""")
+            print("""|              NO RECONOCIDO                  |
++----------------------------------------------------+""")
             print("Error en el elemento nro ",count)
             exit()
         contenido(estadosig,character,simbolo,estado)
 
     #al concluir si el estado no es 3 que es el de aceptacion imprimimos cadena no valida    
     if(estado!=15):
-            print("""|              Cadena No Valida :(                   |
-    +----------------------------------------------------+""")
+            print("""|              NO RECONOCIDO                   |
++----------------------------------------------------+""")
             print("Error en el elemento nro ",count)
     #si el estado es 3 es una cadena de aceptacion
     if(estado==15):
         print("|     ",estado,"      |         |    FND    |               |")
         body()
-        print("""|                Cadena Valida :)                    |
-    +----------------------------------------------------+""")
-        print("Error en el elemento nro ",count)
+        print("""|                RECONOCIDO               |
++----------------------------------------------------+""")
+        print("Simbolos analizados: ",count)
         
 msgleer = """\nElija como desea analizarlo (separar cada palabra o simbolo):
 
