@@ -1,85 +1,85 @@
 from collections import OrderedDict
 
-def esterminal(char):
+def esterm(char):
     if(char.isupper() or char == "`"): 
         return False
     else:
         return True
 
-def insertar(grammar, lhs, rhs):
-    if(lhs in grammar and rhs not in grammar[lhs] and grammar[lhs] != "null"):
-        grammar[lhs].append(rhs)
-    elif(lhs not in grammar or grammar[lhs] == "null"):
-        grammar[lhs] = [rhs]
-    return grammar
+def insertar(gram, lhs, rhs):
+    if(lhs in gram and rhs not in gram[lhs] and gram[lhs] != "null"):
+        gram[lhs].append(rhs)
+    elif(lhs not in gram or gram[lhs] == "null"):
+        gram[lhs] = [rhs]
+    return gram
 	
-def iniciales(lhs, grammar, grammar_first):
-    rhs = grammar[lhs]
+def iniciales(lhs, gram, gram_ini):
+    rhs = gram[lhs]
     for i in rhs:
         k = 0
         flag = 0
-        current = []
+        actual = []
         confirm = 0
         flog = 0
-        if(lhs in grammar and "`" in grammar_first[lhs]):
+        if(lhs in gram and "`" in gram_ini[lhs]):
             flog = 1
         while(1):	
             check = []
             if(k>=len(i)):
-                if(len(current)==0 or flag == 1 or confirm == k or flog == 1):
-                    grammar_first = insertar(grammar_first, lhs, "`")
+                if(len(actual)==0 or flag == 1 or confirm == k or flog == 1):
+                    gram_ini = insertar(gram_ini, lhs, "`")
                 break				
             if(i[k].isupper()):
-                if(grammar_first[i[k]] == "null"):
-                    grammar_first = iniciales(i[k], grammar, grammar_first)
+                if(gram_ini[i[k]] == "null"):
+                    gram_ini = iniciales(i[k], gram, gram_ini)
                    # print("state ", lhs, "i ", i, "k, ", k, grammar_first[i[k]])
-                for j in grammar_first[i[k]]:
-                    grammar_first = insertar(grammar_first, lhs, j)
+                for j in gram_ini[i[k]]:
+                    gram_ini = insertar(gram_ini, lhs, j)
                     check.append(j)
             else:
-                grammar_first = insertar(grammar_first, lhs, i[k])
+                gram_ini = insertar(gram_ini, lhs, i[k])
                 check.append(i[k])
             if(i[k]=="`"):
                 flag = 1
-            current.extend(check)
+            actual.extend(check)
             if("`" not in check):
                 if(flog == 1):
-                    grammar_first = insertar(grammar_first, lhs, "`")
+                    gram_ini = insertar(gram_ini, lhs, "`")
                 break
             else:
                 confirm += 1
                 k+=1
-                grammar_first[lhs].remove("`")
-    return(grammar_first)
+                gram_ini[lhs].remove("`")
+    return(gram_ini)
 
-def seguidoresRec(k, next_i, grammar_follow, i, grammar, start, grammar_first, lhs):
+def seguidoresRec(k, next_i, gram_seg, i, gram, start, gram_ini, lhs):
     if(len(k)==next_i):
-        if(grammar_follow[i] == "null"):
-            grammar_follow = seguidores(i, grammar, grammar_follow, start)
-        for q in grammar_follow[i]:
-            grammar_follow = insertar(grammar_follow, lhs, q)
+        if(gram_seg[i] == "null"):
+            gram_seg = seguidores(i, gram, gram_seg, start)
+        for q in gram_seg[i]:
+            gram_seg = insertar(gram_seg, lhs, q)
     else:
         if(k[next_i].isupper()):
-            for q in grammar_first[k[next_i]]:
+            for q in gram_ini[k[next_i]]:
                 if(q=="`"):
-                    grammar_follow = seguidoresRec(k, next_i+1, grammar_follow, i, grammar, start, grammar_first, lhs)		
+                    gram_seg = seguidoresRec(k, next_i+1, gram_seg, i, gram, start, gram_ini, lhs)		
                 else:
-                    grammar_follow = insertar(grammar_follow, lhs, q)
+                    gram_seg = insertar(gram_seg, lhs, q)
         else:
-            grammar_follow = insertar(grammar_follow, lhs, k[next_i])
+            gram_seg = insertar(gram_seg, lhs, k[next_i])
 
-    return(grammar_follow)
+    return(gram_seg)
 
-def seguidores(lhs, grammar, grammar_follow, start):
-    for i in grammar:
-        j = grammar[i]
+def seguidores(lhs, gram, gram_seg, start):
+    for i in gram:
+        j = gram[i]
         for k in j:
             if(lhs in k):
                 next_i = k.index(lhs)+1
-                grammar_follow = seguidoresRec(k, next_i, grammar_follow, i, grammar, start, grammar_first, lhs)
+                gram_seg = seguidoresRec(k, next_i, gram_seg, i, gram, start, gram_ini, lhs)
     if(lhs==start):
-        grammar_follow = insertar(grammar_follow, lhs, "$")
-    return(grammar_follow)
+        gram_seg = insertar(gram_seg, lhs, "$")
+    return(gram_seg)
 
 def verSimbenDic(dictionary):
     for key in dictionary.keys():
@@ -91,60 +91,60 @@ def verSimbenDic(dictionary):
                 print(item+", ", end = "")
         print("\b\b")
 
-def obtenerReglas(non_terminal, terminal, grammar, grammar_first):
-    for rhs in grammar[non_terminal]:
+def obtenerReglas(noterm, term, gram, gram_ini):
+    for rhs in gram[noterm]:
         #print(rhs)
         for rule in rhs:
-            if(rule == terminal):
-                string = non_terminal+"~"+rhs
+            if(rule == term):
+                string = noterm+"~"+rhs
                 return string
             
-            elif(rule.isupper() and terminal in grammar_first[rule]):
-                string = non_terminal+"~"+rhs
+            elif(rule.isupper() and term in gram_ini[rule]):
+                string = noterm+"~"+rhs
                 return string
                 
-def gentablaanalisis(terminals, non_terminals, grammar, grammar_first, grammar_follow):
-    parse_table = [[""]*len(terminals) for i in range(len(non_terminals))]
+def gentablaanalisis(terms, noterms, gram, gram_ini, gram_seg):
+    tabla_anali = [[""]*len(terms) for i in range(len(noterms))]
     
-    for non_terminal in non_terminals:
-        for terminal in terminals:
-            #print(terminal)
-            #print(grammar_first[non_terminal])
-            if terminal in grammar_first[non_terminal]:
-                rule = obtenerReglas(non_terminal, terminal, grammar, grammar_first)
+    for noterm in noterms:
+        for term in terms:
+            #print(term)
+            #print(grammar_first[noterm])
+            if term in gram_ini[noterm]:
+                rule = obtenerReglas(noterm, term, gram, gram_ini)
                 #print(rule)
                 
-            elif("`" in grammar_first[non_terminal] and terminal in grammar_follow[non_terminal]):
-                rule = non_terminal+"~`"
+            elif("`" in gram_ini[noterm] and term in gram_seg[noterm]):
+                rule = noterm+"~`"
                 
-            elif(terminal in grammar_follow[non_terminal]):
+            elif(term in gram_seg[noterm]):
                 rule = "Sync"
                 
             else:
                 rule = ""
                 
-            parse_table[non_terminals.index(non_terminal)][terminals.index(terminal)] = rule
+            tabla_anali[noterms.index(noterm)][terms.index(term)] = rule
         
-    return(parse_table)
+    return(tabla_anali)
 
-def vertablaanalisis(parse_table, terminal, non_terminal):
+def vertablaanalisis(tabla_anali, term, noterm):
     print("\t\t\t\t",end = "")
-    for terminal in terminals:
-        print(terminal+"\t\t", end = "")
+    for term in terms:
+        print(term+"\t\t", end = "")
     print("\n\n")
     
-    for non_terminal in non_terminals:
-        print("\t\t"+non_terminal+"\t\t", end = "")
-        for terminal in terminals:
-            print(parse_table[non_terminals.index(non_terminal)][terminals.index(terminal)]+"\t\t", end = "")
+    for noterm in noterms:
+        print("\t\t"+noterm+"\t\t", end = "")
+        for term in terms:
+            print(tabla_anali[noterms.index(noterm)][terms.index(term)]+"\t\t", end = "")
         print("\n")
 
 
-def analizar(expr, parse_table, terminals, non_terminals):
+def analizar(expr, tabla_anali, terms, noterms):
     pila = ["$"]
-    pila.insert(0, non_terminals[0])
+    pila.insert(0, noterms[0])
 
-    print("\t\t\tMatched\t\t\tStack\t\t\tInput\t\t\tAction\n")
+    print("\t\t\tEncuentros\t\t\tPila\t\t\tEntrada\t\t\tAcciòn\n")
     print("\t\t\t-\t\t\t", end = "")
     for i in pila:
         print(i,  end = "")
@@ -164,12 +164,12 @@ def analizar(expr, parse_table, terminals, non_terminals):
                 matched = expr[0]
             else:    
                 matched = matched + expr[0]
-            action = "Matched "+expr[0]
+            action = "Encontrado "+expr[0]
             expr = expr[1:]
             pila.pop(0)
 
         else:
-            action = parse_table[non_terminals.index(pila[0])][terminals.index(expr[0])]
+            action = tabla_anali[noterms.index(pila[0])][terms.index(expr[0])]
             pila.pop(0)
             i = 0
             for item in action[2:]:
@@ -194,74 +194,78 @@ def analizar(expr, parse_table, terminals, non_terminals):
 
 
 
-grammar = OrderedDict()
-grammar_first = OrderedDict()
-grammar_follow = OrderedDict()
+gram = OrderedDict()
+gram_ini = OrderedDict()
+gram_seg = OrderedDict()
 
 f = open("/Users/acer/Pictures/PYTHON/datux/Tareas/Tareas/Tarea2/grammar.txt")
-for i in f:
-    i = i.replace("\n", "")
-    lhs = ""
-    rhs = ""
-    flag = 1
-    for j in i:
-        if(j=="~"):
-            flag = (flag+1)%2
-            continue
-        if(flag==1):
-            lhs += j
-        else:
-            rhs += j
-    grammar = insertar(grammar, lhs, rhs)
-    grammar_first[lhs] = "null"
-    grammar_follow[lhs] = "null"
+try:
+    for i in f:
+        i = i.replace("\n", "")
+        lhs = ""
+        rhs = ""
+        flag = 1
+        for j in i:
+            if(j=="~"):
+                flag = (flag+1)%2
+                continue
+            if(flag==1):
+                lhs += j
+            else:
+                rhs += j
+        gram = insertar(gram, lhs, rhs)
+        gram_ini[lhs] = "null"
+        gram_seg[lhs] = "null"
 
-print("Grammar\n")
-verSimbenDic(grammar)
+    print("Gramàtica\n")
+    verSimbenDic(gram)
 
-for lhs in grammar:
-    if(grammar_first[lhs] == "null"):
-        grammar_first = iniciales(lhs, grammar, grammar_first)
-        
-print("\n\n\n")
-print("First\n")
-verSimbenDic(grammar_first)
-
-
-start = list(grammar.keys())[0]
-for lhs in grammar:
-    if(grammar_follow[lhs] == "null"):
-        grammar_follow = seguidores(lhs, grammar, grammar_follow, start)
-        
-print("\n\n\n")
-print("Follow\n")
-verSimbenDic(grammar_follow)
-
-
-non_terminals = list(grammar.keys())
-terminals = []
-
-for i in grammar:
-    for rule in grammar[i]:
-        for char in rule:
+    for lhs in gram:
+        if(gram_ini[lhs] == "null"):
+            gram_ini = iniciales(lhs, gram, gram_ini)
             
-            if(esterminal(char) and char not in terminals):
-                terminals.append(char)
-
-terminals.append("$")
-
-#print(non_terminals)
-#print(terminals)
+    print("\n\n\n")
+    print("Iniciales\n")
+    verSimbenDic(gram_ini)
 
 
-print("\n\n\n\n\t\t\t\t\t\t\tParse Table\n\n")
-parse_table = gentablaanalisis(terminals, non_terminals, grammar, grammar_first, grammar_follow)
-vertablaanalisis(parse_table, terminals, non_terminals)
+    start = list(gram.keys())[0]
+    for lhs in gram:
+        if(gram_seg[lhs] == "null"):
+            gram_seg = seguidores(lhs, gram, gram_seg, start)
+            
+    print("\n\n\n")
+    print("Seguidores\n")
+    verSimbenDic(gram_seg)
 
 
-#expr = input("Enter the expression ending with $ : ")
-expr = "i+i*i$"
+    noterms = list(gram.keys())
+    terms = []
 
-print("\n\n\n\n\n\n")
-print("\t\t\t\t\t\t\tParsing Expression\n\n")
-analizar(expr, parse_table, terminals, non_terminals)
+    for i in gram:
+        for rule in gram[i]:
+            for char in rule:
+                
+                if(esterm(char) and char not in terms):
+                    terms.append(char)
+
+    terms.append("$")
+
+    #print(noterms)
+    #print(terms)
+
+
+    print("\n\n\n\n\t\t\t\t\t\t\tTabla de anàlisis\n\n")
+    tabla_anali = gentablaanalisis(terms, noterms, gram, gram_ini, gram_seg)
+    vertablaanalisis(tabla_anali, terms, noterms)
+
+
+    #expr = input("Enter the expression ending with $ : ")
+    expr = "i+i*i$"
+
+    print("\n\n\n\n\n\n")
+    print("\t\t\t\t\t\t\tAnalizando Expresiòn\n\n")
+    analizar(expr, tabla_anali, terms, noterms)
+    print("\nReconoce\n")
+except NameError:
+    print("\nNo reconoce\n")
