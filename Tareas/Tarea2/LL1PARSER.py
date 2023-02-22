@@ -198,7 +198,7 @@ gram = OrderedDict()
 gram_ini = OrderedDict()
 gram_seg = OrderedDict()
 
-f = open("/Users/acer/Pictures/PYTHON/datux/Tareas/Tareas/Tarea2/grammar.txt")
+f = open("/Users/acer/Pictures/PYTHON/datux/Tareas/Tareas/Tarea2/grammar2.txt")
 try:
     for i in f:
         i = i.replace("\n", "")
@@ -261,7 +261,8 @@ try:
 
 
     #expr = input("Enter the expression ending with $ : ")
-    expr = "i+i*i$"
+    #expr = "i+i*i$"
+    expr = "si"+"{"+"};$"
 
     print("\n\n\n\n\n\n")
     print("\t\t\t\t\t\t\tAnalizando Expresiòn\n\n")

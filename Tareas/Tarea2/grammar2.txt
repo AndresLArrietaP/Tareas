@@ -1,7 +1,14 @@
-P -> bSe
-S -> AR
-R -> AR | @
-A -> a=E;
-E -> FT
-T -> +FT | @
-F -> (E) | a | r
+S~sA{B}C;
+A~i
+A~`
+B~`
+B~D
+D~Ei;
+D~Ei;D
+E~n
+E~f
+C~`
+C~F
+F~iX
+X~,F
+X~`
