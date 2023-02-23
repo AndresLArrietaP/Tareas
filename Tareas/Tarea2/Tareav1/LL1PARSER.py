@@ -198,7 +198,7 @@ gram = OrderedDict()
 gram_ini = OrderedDict()
 gram_seg = OrderedDict()
 
-f = open("/Users/acer/Pictures/PYTHON/datux/Tareas/Tareas/Tarea2/grammar2.txt")
+f = open("/Users/acer/Pictures/PYTHON/datux/Tareas/Tareas/Tarea2/Tareav1/grammar2.txt")
 try:
     for i in f:
         i = i.replace("\n", "")
