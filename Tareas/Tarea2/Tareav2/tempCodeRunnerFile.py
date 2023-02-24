@@ -85,8 +85,50 @@ def main():
     parser = Parser(tokens)
     try:
         parser.S()
-        print("La cadena es válida.")
+        print("\nLa cadena es válida.")
     except ValueError:
-        print("La cadena no es válida.")
+        print("\nLa cadena no es válida.")
 
-main()
+def archivo():
+    file = open("/Users/acer/Pictures/PYTHON/datux/Tareas/Tareas/Tarea2/Tareav2/filetextog.txt") #poner ruta propia
+    a=file.read()
+    #exp=a
+    program = a.split("\n")
+    lista=[]
+    defi=[]
+    for linea in program:
+        item=linea.split(sep=" ")
+        lista.append(item)
+    for sub_lista in lista:
+        for elemento in sub_lista :
+            defi.append(elemento)
+    print('\n')
+    print(defi)
+    parser = Parser(defi)
+    try:
+        parser.S()
+        print("\nLa cadena es válida.")
+    except ValueError:
+        print("\nLa cadena no es válida.")
+
+#main()
+
+msgleer = """\nElija como desea analizarlo (separar cada palabra o simbolo):
+
+    a) Leer en consola
+    b) Leer archivo de texto
+
+    """
+print(msgleer)
+opc=input('Ingresar la opción: ').upper()
+print('Opción elegida: ',opc)
+
+if(opc!='A' or opc!='B'):
+    if opc=='A':
+        main()
+    elif opc=='B':
+        archivo()
+    else:
+        print('OPCION INVÁLIDA')
+else:
+    print('OPCIÓN INVALIDA')

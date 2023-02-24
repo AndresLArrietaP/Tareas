@@ -1,0 +1,4 @@
+struct hola {
+int mun ;
+float do ;
+} bue , nas ;
