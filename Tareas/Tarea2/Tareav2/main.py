@@ -1,4 +1,4 @@
-
+import re
 class Parser:
     def __init__(self, tokens):
         self.tokens = tokens
@@ -25,23 +25,36 @@ class Parser:
         self.match(";")
 
     def A(self):
-        if self.lookahead == "identifier":
-            self.match("identifier")
+        self.iden="[a-zA-Z_][a-zA-Z0-9_]"
+        if re.match(self.iden,self.lookahead):
+            #re.match(self.iden,self)
+            self.match(self.lookahead)
         else:
             pass # A -> ε
 
     def B(self):
+        self.iden="[a-zA-Z_][a-zA-Z0-9_]"
         if self.lookahead in ["int", "float", "double", "char", "bool", "string"]:
             self.D()
-            while self.lookahead == "identifier":
+            while re.match(self.iden,self.lookahead):
                 self.D()
         else:
             pass # B -> ε
 
     def D(self):
         self.E()
-        self.match("identifier")
+        self.match(self.lookahead)
         self.match(";")
+        self.W()
+    
+    def W(self):
+        self.iden="[a-zA-Z_][a-zA-Z0-9_]"
+        if self.lookahead in ["int", "float", "double", "char", "bool", "string"]:
+            self.D()
+            while re.match(self.iden,self.lookahead):
+                self.D()
+        else:
+            pass # B -> ε
 
     def E(self):
         if self.lookahead in ["int", "float", "double", "char", "bool", "string"]:
@@ -50,13 +63,14 @@ class Parser:
             raise ValueError("Error de sintaxis")
 
     def C(self):
-        if self.lookahead == "identifier":
+        self.iden="[a-zA-Z_][a-zA-Z0-9_]"
+        if re.match(self.iden,self.lookahead):
             self.F()
         else:
             pass # C -> ε
 
     def F(self):
-        self.match("identifier")
+        self.match(self.lookahead)
         self.X()
 
     def X(self):

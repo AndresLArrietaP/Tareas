@@ -198,75 +198,76 @@ gram = OrderedDict()
 gram_ini = OrderedDict()
 gram_seg = OrderedDict()
 
-f = open("/Users/acer/Pictures/PYTHON/datux/Tareas/Tareas/Tarea2/grammar2.txt")
+f = open("/Users/acer/Pictures/PYTHON/datux/Tareas/Tareas/Tarea2/Tareav1/grammar2.txt")
+
+for i in f:
+    i = i.replace("\n", "")
+    lhs = ""
+    rhs = ""
+    flag = 1
+    for j in i:
+        if(j=="~"):
+            flag = (flag+1)%2
+            continue
+        if(flag==1):
+            lhs += j
+        else:
+            rhs += j
+    gram = insertar(gram, lhs, rhs)
+    gram_ini[lhs] = "null"
+    gram_seg[lhs] = "null"
+
+print("Gramàtica\n")
+verSimbenDic(gram)
+
+for lhs in gram:
+    if(gram_ini[lhs] == "null"):
+        gram_ini = iniciales(lhs, gram, gram_ini)
+        
+print("\n\n\n")
+print("Iniciales\n")
+verSimbenDic(gram_ini)
+
+
+start = list(gram.keys())[0]
+for lhs in gram:
+    if(gram_seg[lhs] == "null"):
+        gram_seg = seguidores(lhs, gram, gram_seg, start)
+        
+print("\n\n\n")
+print("Seguidores\n")
+verSimbenDic(gram_seg)
+
+
+noterms = list(gram.keys())
+terms = []
+
+for i in gram:
+    for rule in gram[i]:
+        for char in rule:
+            
+            if(esterm(char) and char not in terms):
+                terms.append(char)
+
+terms.append("$")
+
+#print(noterms)
+#print(terms)
+
+
+print("\n\n\n\n\t\t\t\t\t\t\tTabla de anàlisis\n\n")
+tabla_anali = gentablaanalisis(terms, noterms, gram, gram_ini, gram_seg)
+vertablaanalisis(tabla_anali, terms, noterms)
+
+
+#expr = input("Enter the expression ending with $ : ")
+#expr = "i+i*i$"
+expr = "si"+"{"+"};$"
+
+print("\n\n\n\n\n\n")
+print("\t\t\t\t\t\t\tAnalizando Expresiòn\n\n")
 try:
-    for i in f:
-        i = i.replace("\n", "")
-        lhs = ""
-        rhs = ""
-        flag = 1
-        for j in i:
-            if(j=="~"):
-                flag = (flag+1)%2
-                continue
-            if(flag==1):
-                lhs += j
-            else:
-                rhs += j
-        gram = insertar(gram, lhs, rhs)
-        gram_ini[lhs] = "null"
-        gram_seg[lhs] = "null"
-
-    print("Gramàtica\n")
-    verSimbenDic(gram)
-
-    for lhs in gram:
-        if(gram_ini[lhs] == "null"):
-            gram_ini = iniciales(lhs, gram, gram_ini)
-            
-    print("\n\n\n")
-    print("Iniciales\n")
-    verSimbenDic(gram_ini)
-
-
-    start = list(gram.keys())[0]
-    for lhs in gram:
-        if(gram_seg[lhs] == "null"):
-            gram_seg = seguidores(lhs, gram, gram_seg, start)
-            
-    print("\n\n\n")
-    print("Seguidores\n")
-    verSimbenDic(gram_seg)
-
-
-    noterms = list(gram.keys())
-    terms = []
-
-    for i in gram:
-        for rule in gram[i]:
-            for char in rule:
-                
-                if(esterm(char) and char not in terms):
-                    terms.append(char)
-
-    terms.append("$")
-
-    #print(noterms)
-    #print(terms)
-
-
-    print("\n\n\n\n\t\t\t\t\t\t\tTabla de anàlisis\n\n")
-    tabla_anali = gentablaanalisis(terms, noterms, gram, gram_ini, gram_seg)
-    vertablaanalisis(tabla_anali, terms, noterms)
-
-
-    #expr = input("Enter the expression ending with $ : ")
-    #expr = "i+i*i$"
-    expr = "si"+"{"+"};"
-
-    print("\n\n\n\n\n\n")
-    print("\t\t\t\t\t\t\tAnalizando Expresiòn\n\n")
     analizar(expr, tabla_anali, terms, noterms)
     print("\nReconoce\n")
-except NameError:
+except:
     print("\nNo reconoce\n")
