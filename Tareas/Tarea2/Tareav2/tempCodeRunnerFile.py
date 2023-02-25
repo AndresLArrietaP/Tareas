@@ -23,6 +23,7 @@ class Parser:
         self.match("}")
         self.C()
         self.match(";")
+        self.G()
 
     def A(self):
         self.iden="[a-zA-Z_][a-zA-Z0-9_]"
@@ -79,9 +80,29 @@ class Parser:
             self.F()
         else:
             pass # X -> ε
+
+    def G(self):
+        self.iden="[a-zA-Z_][a-zA-Z0-9_]"
+        if re.match(self.iden,self.lookahead):
+            self.match(self.lookahead)
+            self.match(self.lookahead)
+            self.H()
+            self.match(";")
+            self.match("$")
+        else:
+            self.match("$")
+
+    def H(self):
+        if self.lookahead == ",":
+            self.match(",")
+            self.match(self.lookahead)
+        else:
+            pass
+
 def main():
     input_string = input("Ingresa la cadena a analizar: ")
     tokens = input_string.split()
+    tokens.append("$")
     parser = Parser(tokens)
     try:
         parser.S()
@@ -92,8 +113,8 @@ def main():
 def archivo():
     file = open("/Users/acer/Pictures/PYTHON/datux/Tareas/Tareas/Tarea2/Tareav2/filetextog.txt") #poner ruta propia
     a=file.read()
-    #exp=a
-    program = a.split("\n")
+    exp=a+" $"
+    program = exp.split("\n")
     lista=[]
     defi=[]
     for linea in program:
